@@ -1,7 +1,7 @@
 "use server";
 
 import { strings } from "@/components/string";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/supabase/server";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
