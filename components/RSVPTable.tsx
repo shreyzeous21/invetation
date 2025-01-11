@@ -1,15 +1,20 @@
 "use client";
 
 import * as React from "react";
+import { useState } from "react";
 import {
   Table,
-  TableBody,
-  TableCell,
-  TableHead,
   TableHeader,
   TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
+import { deleteRSVP } from "@/app/actions/RSVPDelete";
+import { useToast } from "@/hooks/use-toast";
 
 interface RSVP {
   id: string;
@@ -23,14 +28,37 @@ interface RSVPTableProps {
   data: RSVP[];
 }
 
-export function RSVPTable({ data }: RSVPTableProps) {
+export default function RSVPTable({ data: initialData }: RSVPTableProps) {
   const [filter, setFilter] = React.useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const [data, setData] = useState(initialData);
 
   const filteredData = React.useMemo(() => {
     return data.filter((rsvp) =>
       rsvp.name.toLowerCase().includes(filter.toLowerCase())
     );
   }, [data, filter]);
+
+  const handleDelete = async (id: any) => {
+    setIsLoading(true);
+    const result = await deleteRSVP(id);
+
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: "RSVP deleted successfully",
+      });
+      setData(data.filter((rsvp) => rsvp.id !== id));
+    } else {
+      toast({
+        title: "Error",
+        description: result.message,
+        variant: "destructive",
+      });
+    }
+    setIsLoading(false);
+  };
 
   return (
     <div>
@@ -50,21 +78,33 @@ export function RSVPTable({ data }: RSVPTableProps) {
               <TableHead>Email</TableHead>
               <TableHead>Number of Guests</TableHead>
               <TableHead>Attending</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="space-y-2">
             {filteredData.length > 0 ? (
               filteredData.map((rsvp) => (
                 <TableRow key={rsvp.id}>
                   <TableCell>{rsvp.name}</TableCell>
                   <TableCell>{rsvp.email}</TableCell>
-                  <TableCell>{rsvp.accompany || "/"}</TableCell>
+                  <TableCell>{rsvp.accompany || "unknown"}</TableCell>
                   <TableCell>{rsvp.attendance}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleDelete(rsvp.id)}
+                      disabled={isLoading}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      <Trash className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} className="h-24 text-center">
+                <TableCell colSpan={5} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

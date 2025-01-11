@@ -1,7 +1,7 @@
 
 import { signOut } from "@/app/actions/auth";
 import { getRSVPs } from "@/app/actions/RSVPGet";
-import { RSVPTable } from "@/components/RSVPTable";
+import  RSVPTable  from "@/components/RSVPTable";
 import { Button } from "@/components/ui/button";
 import { House } from "lucide-react";
 import Link from "next/link";
