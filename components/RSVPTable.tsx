@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { deleteRSVP } from "@/app/actions/RSVPDelete";
 import { useToast } from "@/hooks/use-toast";
+import { ChartTable } from "./Chart";
 
 interface RSVP {
   id: string;
@@ -61,8 +62,8 @@ export default function RSVPTable({ data: initialData }: RSVPTableProps) {
   };
 
   return (
-    <div>
-      <div className="flex items-center py-4">
+    <div className="flex flex-col space-y-4">
+      <div className="flex items-center ">
         <Input
           placeholder="Filter by name..."
           value={filter}
@@ -112,6 +113,7 @@ export default function RSVPTable({ data: initialData }: RSVPTableProps) {
           </TableBody>
         </Table>
       </div>
+      <ChartTable/>
     </div>
   );
 }
