@@ -61,6 +61,8 @@ export default function RSVPTable({ data: initialData }: RSVPTableProps) {
     setIsLoading(false);
   };
 
+  const totalAccompany = data.reduce((sum, rsvp) => sum + rsvp.accompany, 0);
+
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex items-center ">
@@ -113,7 +115,7 @@ export default function RSVPTable({ data: initialData }: RSVPTableProps) {
           </TableBody>
         </Table>
       </div>
-      <ChartTable/>
+      <ChartTable data={[{ accompany: totalAccompany }]} />
     </div>
   );
 }
